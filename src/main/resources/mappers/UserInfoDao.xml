@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssm.dao.UserInfoDao">
+
+
+    <resultMap type="com.ssm.entity.po.UserInfoPo" id="BaseResultMap">
+        <id property="id" column="id_"/>
+        <result property="name" column="name_"/>
+        <result property="password" column="password_"/>
+    </resultMap>
+    <!--
+          选择性插入
+        -->
+    <sql id="Base_Insert_Selective">
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id_,
+            </if>
+            <if test="name != null">
+                name_,
+            </if>
+            <if test="password != null">
+                password_
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR}
+            </if>
+        </trim>
+    </sql>
+
+    <!--
+      数据库表的基本查询列名集合
+    -->
+    <sql id="Base_Column_List">
+        id_, name_, password_
+    </sql>
+
+    <!--
+      数据库表的基本查询列名集合（不包括id）
+    -->
+    <sql id="Base_Column_List_1">
+        name_, password_
+    </sql>
+
+    <!--
+        Where子句
+      -->
+    <sql id="Base_Query_Where">
+        <if test="id != null">
+            and id_ = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="name != null">
+            and name_ = #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="password != null">
+            and password_ = #{password,jdbcType=VARCHAR}
+        </if>
+    </sql>
+
+    <!--
+        基本更新字段
+    -->
+    <sql id="Base_Update_Column">
+        <set>
+            <if test="id != null">
+                id_ = #{id,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                name_ = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password_ = #{password,jdbcType=VARCHAR}
+            </if>
+        </set>
+    </sql>
+
+    <!--
+        分页查询数据库表
+      -->
+    <select id="selectPaged" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_info
+    </select>
+
+    <!--
+      根据主键查询数据库表
+    -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_info
+        where id_ = #{id,jdbcType=INTEGER}
+    </select>
+
+    <!--
+      根据name_查询数据库表
+    -->
+    <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_info
+        where name_ = #{name,jdbcType=VARCHAR}
+    </select>
+
+    <!--
+      根据主键删除数据库表中的记录
+    -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete FROM user_info
+        where id_ = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <!--
+      添加一条记录到数据库表中
+    -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.ssm.entity.po.UserInfoPo">
+        insert into user_info
+        (<include refid="Base_Column_List_1"/>)
+        values (
+        <if test="name != null">
+            #{name,jdbcType=VARCHAR},
+        </if>
+        <if test="password != null">
+            #{password,jdbcType=VARCHAR}
+        </if>
+        )
+    </insert>
+
+</mapper>
